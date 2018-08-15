@@ -16,7 +16,7 @@
 
 #-------------------------- INPUT ------------------------------------
 
-fastaSequence = readDNAStringSet("PPP_Promoter_500bpFromATG.fa",format = "fasta")
+fastaSequence = "PPP_Promoter_500bpFromATG.fa"
 mymotifs = read.clipboard(header=FALSE)
 
 #------------------------- FUNCTION ----------------------------------
@@ -29,6 +29,7 @@ require("tidyverse")
 require("ggpubr")
 require("Biostrings")
 
+fastaSequence = readDNAStringSet(fastaSequence,format = "fasta")
 DNA_mymotifs <- DNAStringSet(as.matrix(mymotifs))
 
 #--- Compute reverse complement of the given motifs
