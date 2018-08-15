@@ -1,11 +1,4 @@
----
-title: "ChIPSeq data analysis and visualisation"
-output: github_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# ChIPSeq data analysis and visualisation
 
 ## motif_location_on_sequence 
 This function helps you to locate motifs on the reference fasta sequences provided by the user. 
