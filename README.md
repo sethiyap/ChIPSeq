@@ -1,4 +1,3 @@
-# ChIPSeq
 ---
 title: "ChIPSeq data analysis and visualisation"
 output: github_document
