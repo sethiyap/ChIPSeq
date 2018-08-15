@@ -20,6 +20,8 @@ fastaSequence = readDNAStringSet("PPP_Promoter_500bpFromATG.fa",format = "fasta"
 mymotifs = read.clipboard(header=FALSE)
 
 #------------------------- FUNCTION ----------------------------------
+
+
 motif_location_on_sequence = function(fastaSequence, mymotifs, output_name,x="Percent"){
 
 require("tidyverse")
