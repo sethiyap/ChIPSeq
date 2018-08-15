@@ -12,7 +12,7 @@
 #         TAAATAGGGAT
 #--- 3. Provide output file name, this will contain the location of motif and which motif is found in which gene
 #--- 4. Provide x-axis to be plotted i.e. "percent" position or just the "start" of the motif on the reference sequence
-#--- Run the function as: motif_location_on_sequence(fastaSequence, mymotifs,"PPP_Msn4",y = "start")
+#--- Run the function as: motif_location_on_sequence(fastaSequence, mymotifs,"PPP_Msn4",x = "start")
 
 #-------------------------- INPUT ------------------------------------
 
@@ -24,6 +24,7 @@ mymotifs = read.clipboard(header=FALSE)
 
 motif_location_on_sequence = function(fastaSequence, mymotifs, output_name,x="Percent"){
 
+require(psych)
 require("tidyverse")
 require("ggpubr")
 require("Biostrings")
@@ -106,7 +107,7 @@ ggdotchart(motif_data,x="genes", y=x,
            y.text.col = FALSE,                            # Color y text by groups
            ggtheme = theme_pubr())+
           scale_y_reverse()+ 
-          ylab("")+
+          ylab("Distance From Start")+
           coord_flip()+
           theme(legend.text = element_blank(),legend.position = "none",
                 axis.text.x = element_text(face="bold", colour="black", size=16,angle=0),
