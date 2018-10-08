@@ -10,8 +10,8 @@
 # 3. copy paste motifs list 
 # 4. flankong base pair from summit (e.g. 100)
 # 5. want to compute reverse complement for your motifs list? Work only for DNA (A,T,G,C,N) sequence
-genome_fasta <- "/Users/Pooja/Documents/Data-Analysis/PhD/Hsf1/ChIP-Seq/Calbicans/CaHsf1_ChIP_Set1/Reference/C_albicans_SC5314_version_A21-s02-m09-r10_chromosomes.fasta"
-macs2_summit_file <- "Glucose_42C_0min_B_narrow_summits.bed"
+genome_fasta <- "ABC_chromosomes.fasta"
+macs2_summit_file <- "ABC_summits.bed"
 mymotifs = read.clipboard(header=FALSE)
 
 #--- run as
