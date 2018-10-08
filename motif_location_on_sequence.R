@@ -12,7 +12,7 @@
 #         TAAATAGGGAT
 #--- 3. Provide output file name, this will contain the location of motif and which motif is found in which gene
 #--- 4. Provide x-axis to be plotted i.e. "percent" position or just the "start" of the motif on the reference sequence
-#--- Run the function as: motif_location_on_sequence(fastaSequence, mymotifs,"PPP_Msn4",x = "start")
+#--- Run the function as: motif_location_on_sequence(fastaSequence, mymotifs,"PPP_Msn4_1",x = "start")
 
 #-------------------------- INPUT ------------------------------------
 
@@ -38,8 +38,8 @@ revComplement <- reverseComplement(DNA_mymotifs)
 revComplement <- as.data.frame(revComplement)
 
 #--- Combine the motifs and their reverse complements
-all_motifs <- cbind(mymotifs$V1, revComplement$x)
-all_motifs <- as.matrix(all_motifs[,2])
+all_motifs <- rbind.DataFrame(mymotifs$V1,revComplement$revComplement)
+all_motifs <- as.matrix(all_motifs$X)
 
 #--- compute the location of the motifs on the given sequences
 ll <- list()
@@ -107,7 +107,7 @@ ggdotchart(motif_data,x="genes", y=x,
            dot.size = 4,                                 # Large dot size
            y.text.col = FALSE,                            # Color y text by groups
            ggtheme = theme_pubr())+
-          scale_y_reverse()+ 
+          scale_y_reverse()+  
           ylab("Distance From Start")+
           coord_flip()+
           theme(legend.text = element_blank(),legend.position = "none",
@@ -115,5 +115,5 @@ ggdotchart(motif_data,x="genes", y=x,
                 axis.text.y = element_text(face="bold", colour="black", size=12,angle=0))+
           guides(fill = guide_legend(title = ""),color = guide_legend(title = ""))+
           theme_cleveland()
-
+ggsave(paste(output_name,"_GenesWithMotifs.pdf", sep=""),device = "pdf", width=5, height = 5)
 }
