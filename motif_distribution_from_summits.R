@@ -13,9 +13,21 @@
 genome_fasta <- "ABC_chromosomes.fasta"
 macs2_summit_file <- "ABC_summits.bed"
 mymotifs = read.clipboard(header=FALSE)
+# SYGGRG	CTGGAG				
+# SYGGRG	CTGGGG
+# SYGGRG	CCGGAG
+# SYGGRG	CCGGGG
+# SYGGRG	GTGGAG
+# SYGGRG	GTGGGG
+# SYGGRG	GCGGAG
+# SYGGRG	GCGGGG
+# GGCSS	GGCCC
+# GGCSS	GGCCG
+# GGCSS	GGCGC
+# GGCSS	GGCGG
 
 #--- run as
-motif_distirbution_from_summits(macs2_summit_file,genome_fasta,mymotifs,flank_from_summit = 100, motif_revComplement="TRUE")
+motif_distirbution_from_summits(macs2_summit_file,genome_fasta,mymotifs,flank_from_summit = 100, motif_revComplement="FALSE")
 
 #-- load function first
 motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymotifs, flank_from_summit, motif_revComplement="FALSE"){
@@ -72,9 +84,9 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
           #--- compute the location of the motifs on the given sequences
           ll <- list()
           tt  <-  list()
-          for(i in seq_along(all_motifs)){
-         
-                    mi0 <- vmatchPattern(all_motifs[i], flank_seq)     
+          for(i in seq_along(all_motifs[,1])){
+                    #i=1
+                    mi0 <- vmatchPattern(all_motifs[i,2], flank_seq,fixed="subject")     
                     
                     coords = as.data.frame(mi0)
                     
@@ -101,20 +113,25 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
           
           #---- Unique genes associated with the motifs
           genes_with_motifs <- as.tibble(do.call("rbind", ll)) %>% mutate(motif=rownames(.)) 
-          genes_with_motifs$motif <- str_replace(genes_with_motifs$motif,"\\.[0-9]","")
+          genes_with_motifs$motif <- str_replace(genes_with_motifs$motif,"\\..*","")
+          
+          write_delim(genes_with_motifs, paste(basename(macs2_summit_file),"_peaks_with_motif.tab", sep=""), delim ="\t",col_names = TRUE )
+          
           genes_with_motifs$gene_width = width(flank_seq[genes_with_motifs$genes])
           
           message("motif occurrences: ", nrow(genes_with_motifs))
+          print(table(genes_with_motifs$motif))
+          
           
           genes_with_motifs$start <- as.numeric(levels(genes_with_motifs$start))[genes_with_motifs$start]
           
           #-- plot the motifs on the binding site
          gg <- ggplot(genes_with_motifs,aes(x=start, y=genes, color=motif,shape=motif))+
-                    geom_point(alpha=0.8, size=6)+
+                    geom_point(alpha=0.8, size=1.8)+
                     geom_vline(data = genes_with_motifs, aes(xintercept=gene_width/2),color="blue",size=2)+
                     ylab("binding sites")+
                     xlab("")+
-                    theme_bw()+
+                    theme_classic()+
                     scale_x_continuous(limits = c(0, genes_with_motifs$gene_width[1]),breaks=c(0,51,101,151,201), labels=c("-100bp", "-50bp", "summit", "50bp", "100bp"))+
                     theme(legend.position = "top",
                           axis.ticks.y = element_blank(),
@@ -124,6 +141,6 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
           
          print(gg)
          #--- save output file
-         ggsave(paste(basename(macs2_summit_file),"_motifdistribution.pdf", sep=""),device = "pdf", width=5, height = 5)
+         ggsave(paste(basename(macs2_summit_file),"_motifdistribution.pdf", sep=""),device = "pdf", width=5, height = 7)
           
 }
