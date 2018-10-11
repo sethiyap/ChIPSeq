@@ -13,7 +13,7 @@
 genome_fasta <- "ABC_chromosomes.fasta"
 macs2_summit_file <- "ABC_summits.bed"
 mymotifs = read.clipboard(header=FALSE)
-# SYGGRG	CTGGAG				
+# SYGGRG	CTGGAG				    
 # SYGGRG	CTGGGG
 # SYGGRG	CCGGAG
 # SYGGRG	CCGGGG
