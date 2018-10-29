@@ -10,8 +10,8 @@
 # 3. copy paste motifs list 
 # 4. flankong base pair from summit (e.g. 100)
 # 5. want to compute reverse complement for your motifs list? Work only for DNA (A,T,G,C,N) sequence
-genome_fasta <- "ABC_chromosomes.fasta"
-macs2_summit_file <- "ABC_summits.bed"
+genome_fasta <- "genome_chromosomes.fasta"
+macs2_summit_file <- "rcoa_summits.bed"
 mymotifs = read.clipboard(header=FALSE)
 # SYGGRG	CTGGAG				    
 # SYGGRG	CTGGGG
@@ -125,6 +125,14 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
           
           genes_with_motifs$start <- as.numeric(levels(genes_with_motifs$start))[genes_with_motifs$start]
           
+         # genes_with_motifs$genes  <- genes_with_motifs$genes[match(genes_with_motifs$genes, summit_100bp$name)]
+          # genes_with_motifs$genes <- as.factor(genes_with_motifs$genes)
+          
+          end_5 <- paste("-",flank_from_summit,"bp",sep="")
+          end_3 <- paste(flank_from_summit,"bp",sep="")
+          width <- unique(genes_with_motifs$gene_width)
+          
+          
           #-- plot the motifs on the binding site
          gg <- ggplot(genes_with_motifs,aes(x=start, y=genes, color=motif,shape=motif))+
                     geom_point(alpha=0.8, size=1.8)+
@@ -132,7 +140,7 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
                     ylab("binding sites")+
                     xlab("")+
                     theme_classic()+
-                    scale_x_continuous(limits = c(0, genes_with_motifs$gene_width[1]),breaks=c(0,51,101,151,201), labels=c("-100bp", "-50bp", "summit", "50bp", "100bp"))+
+                    scale_x_continuous(limits = c(0, genes_with_motifs$gene_width[1]),breaks=c(0,width/2,width), labels=c(end_5,"summit",end_3))+
                     theme(legend.position = "top",
                           axis.ticks.y = element_blank(),
                           legend.text = element_text(face="bold", colour="black", size=12,angle=0),
@@ -142,5 +150,20 @@ motif_distirbution_from_summits <- function(macs2_summit_file,genome_fasta, mymo
          print(gg)
          #--- save output file
          ggsave(paste(basename(macs2_summit_file),"_motifdistribution.pdf", sep=""),device = "pdf", width=5, height = 7)
+         
+         #-- Plot density
+         
+        gd <-  ggplot(genes_with_motifs,aes(start, fill=motif))+geom_density(alpha=0.7)+
+                  xlab("")+
+                  theme_classic()+
+                  scale_x_continuous(limits = c(0, genes_with_motifs$gene_width[1]),breaks=c(0,width/2,width), labels=c(end_5,"summit",end_3))+
+                  theme(legend.position = "top",
+                        legend.text = element_text(face="bold", colour="black", size=12,angle=0),
+                        axis.text.y = element_text(face="bold", colour="black", size=12,angle=0),
+                        axis.text.x = element_text(face="bold", colour="black", size=12,angle=0))
+        
+        print(gd)
+        
+        ggsave(paste(basename(macs2_summit_file),"_motifdensity.pdf", sep=""),device = "pdf", width=5, height = 7)
           
 }
